@@ -1,6 +1,5 @@
 import Testing
 import Utf8parse
-import RustLang
 
 private final class ParseRecorder {
     var codepoints: [UInt32] = []

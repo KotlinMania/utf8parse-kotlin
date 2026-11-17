@@ -30,7 +30,6 @@ for (b in "héllo".encodeToByteArray()) {
 
 ```swift
 import Utf8parse
-import RustLang
 
 let parser = Parser.Companion.shared.new()
 let receiver = CallbackReceiver(
