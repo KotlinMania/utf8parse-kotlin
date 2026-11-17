@@ -1,21 +1,24 @@
 import Testing
 import Utf8parse
-import RustLang
+
+private final class ParseRecorder {
+    var codepoints: [UInt32] = []
+    var invalidCount: Int = 0
+}
 
 @Suite("Utf8parse Swift Export Tests")
 struct Utf8parseExportTests {
     @Test("Utf8parse parses ASCII, multibyte scalars, and invalid bytes across Swift boundary")
     func testParserRoundTrip() throws {
         let parser = Parser.Companion.shared.new()
-        var codepoints: [UInt32] = []
-        var invalidCount = 0
+        let recorder = ParseRecorder()
 
         let receiver = CallbackReceiver(
-            onCodepoint: { ch in
-                codepoints.append(ch.code)
+            onCodepoint: codepointCallback { ch in
+                recorder.codepoints.append(ch.code)
             },
-            onInvalidSequence: {
-                invalidCount += 1
+            onInvalidSequence: invalidSequenceCallback {
+                recorder.invalidCount += 1
             }
         )
 
@@ -25,8 +28,8 @@ struct Utf8parseExportTests {
             parser.advance(receiver: receiver, byte: byte)
         }
 
-        #expect(codepoints == [0x41, 0xE9, 0x1F600])
-        #expect(invalidCount == 1)
+        #expect(recorder.codepoints == [0x41, 0xE9, 0x1F600])
+        #expect(recorder.invalidCount == 1)
 
         let fresh = Parser.Companion.shared.`default`()
         #expect(fresh == Parser())
