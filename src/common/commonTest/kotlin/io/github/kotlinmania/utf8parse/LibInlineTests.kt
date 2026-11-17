@@ -28,13 +28,20 @@ public class LibInlineTests {
         val receiver = RecordingReceiver()
 
         // 'A' (0x41), invalid continuation 0x80, '😀' U+1F600 (F0 9F 98 80), overlong C0 80, surrogate ED A0 80
-        val bytes = ubyteArrayOf(
-            0x41u,
-            0x80u,
-            0xF0u, 0x9Fu, 0x98u, 0x80u,
-            0xC0u, 0x80u,
-            0xEDu, 0xA0u, 0x80u,
-        )
+        val bytes =
+            ubyteArrayOf(
+                0x41u,
+                0x80u,
+                0xF0u,
+                0x9Fu,
+                0x98u,
+                0x80u,
+                0xC0u,
+                0x80u,
+                0xEDu,
+                0xA0u,
+                0x80u,
+            )
         for (b in bytes) {
             parser.advance(receiver, b)
         }
